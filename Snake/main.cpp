@@ -98,16 +98,16 @@ int main(int argc, char* argv[]) {
                 else if (e.type == SDL_KEYDOWN) {
                     switch (e.key.keysym.sym) {
                     case SDLK_w:
-                        currentDirection = UP;
+                        currentDirection = currentDirection != DOWN ? UP : currentDirection;
                         break;
                     case SDLK_d:
-                        currentDirection = RIGHT;
+                        currentDirection = currentDirection != LEFT ? RIGHT : currentDirection;
                         break;
                     case SDLK_s:
-                        currentDirection = DOWN;
+                        currentDirection = currentDirection != UP ? DOWN : currentDirection;
                         break;
                     case SDLK_a:
-                        currentDirection = LEFT;
+                        currentDirection = currentDirection != RIGHT ? LEFT : currentDirection;
                         break;
                     default:
                         break;
@@ -260,7 +260,7 @@ int main(int argc, char* argv[]) {
                         SDL_SetRenderDrawColor(mRenderer, 0, 255, 0, 255);
                     }
                     else {
-                        SDL_SetRenderDrawColor(mRenderer, 0, 128, 0, 255);
+                        SDL_SetRenderDrawColor(mRenderer, 0, 196, 0, 255);
                     }
 
                     SDL_Rect snakeSegment;
