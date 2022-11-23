@@ -26,8 +26,12 @@ float SCREEN_TICKS_PER_FRAME = 1000.0f / SCREEN_FPS;
 int TILE_SIZE = 24;
 
 // SNAKE CONSTANTS
+int SNAKE_INITIAL_LENGTH = 1;
 int SNAKE_SPAWN_X = (SCREEN_WIDTH / TILE_SIZE) / 2;
 int SNAKE_SPAWN_Y = (SCREEN_HEIGHT / TILE_SIZE) / 2;
+float SNAKE_INITIAL_SPEED = 0.2f;
+float SNAKE_MOVE_STEPPING = 0.005f;
+float SNAKE_MAX_SPEED = 0.07f;
 
 // FUNCTIONS SIGS
 bool init();
@@ -59,18 +63,15 @@ int main(int argc, char* argv[]) {
     snakeRect.h = TILE_SIZE;
     SDL_Point snakeHeadPos;
 
-    int snakeLength = 1;
+    int snakeLength = SNAKE_INITIAL_LENGTH;
     std::deque<SDL_Point> snakeSegments;
     SDL_Point snakeSegment;
 
     int frameCounter = 0;
     int moveCounter = 0;
 
-    float snakeMoveSpeed = 0.2f;
+    float snakeMoveSpeed = SNAKE_INITIAL_SPEED;
     int move_speed_counter = 0;
-
-    int foodXPos = 0;
-    int foodYPos = 0;
 
     Directions currentDirection = DEFAULT;
 
@@ -156,7 +157,7 @@ int main(int argc, char* argv[]) {
             foodRect.x = foodPos.x * TILE_SIZE;
             foodRect.y = foodPos.y * TILE_SIZE;
 
-            SDL_SetRenderDrawColor(mRenderer, 0, 255, 0, 255);
+            SDL_SetRenderDrawColor(mRenderer, 255, 0, 0, 255);
             SDL_RenderFillRect(mRenderer, &foodRect);
 
             // MOVE SNAKE
@@ -193,7 +194,6 @@ int main(int argc, char* argv[]) {
                     snakeHeadPos.y > SCREEN_HEIGHT - (TILE_SIZE * 2)
                    )
                 {
-                    std::cout << "Collided!" << std::endl;
                     collided = true;
                     break;
                 }
@@ -211,9 +211,9 @@ int main(int argc, char* argv[]) {
                     foodConsumed = true;
                     snakeLength++;
 
-                    if (snakeMoveSpeed > 0.05f)
-
-                    snakeMoveSpeed -= 0.001f;
+                    if ((snakeMoveSpeed - SNAKE_MOVE_STEPPING) > SNAKE_MAX_SPEED) {
+                        snakeMoveSpeed -= SNAKE_MOVE_STEPPING;
+                    }
                     snakeSegments.push_front(snakeHeadPos);
                 }
                 else {
@@ -255,9 +255,14 @@ int main(int argc, char* argv[]) {
 
             // DRAW SNAKE
             if (!collided) {
-                SDL_SetRenderDrawColor(mRenderer, 255, 0, 0, 255);
-
                 for (int i = 0; i < snakeSegments.size(); i++) {
+                    if (i == 0) {
+                        SDL_SetRenderDrawColor(mRenderer, 0, 255, 0, 255);
+                    }
+                    else {
+                        SDL_SetRenderDrawColor(mRenderer, 0, 128, 0, 255);
+                    }
+
                     SDL_Rect snakeSegment;
                     snakeSegment.x = snakeSegments.at(i).x;
                     snakeSegment.y = snakeSegments.at(i).y;
@@ -276,6 +281,9 @@ int main(int argc, char* argv[]) {
 
 
             /// DEBUG SECTION /// 
+
+            //std::cout << "snake speed : " << snakeMoveSpeed << std::endl;
+
             //ss << "frames: " << frameCounter;
 
             //// render the frame counter to screen
