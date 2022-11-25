@@ -30,7 +30,7 @@ int SNAKE_INITIAL_LENGTH = 1;
 int SNAKE_SPAWN_X = (SCREEN_WIDTH / TILE_SIZE) / 2;
 int SNAKE_SPAWN_Y = (SCREEN_HEIGHT / TILE_SIZE) / 2;
 float SNAKE_INITIAL_SPEED = 0.2f;
-float SNAKE_MOVE_STEPPING = 0.005f;
+float SNAKE_MOVE_STEPPING = 0.0015f;
 float SNAKE_MAX_SPEED = 0.07f;
 
 // FUNCTIONS SIGS
@@ -201,6 +201,7 @@ int main(int argc, char* argv[]) {
                 // Goes through snakeSegments queue to see if head collided with segment
                 for (const SDL_Point point : snakeSegments) {
                     if (point.x == snakeHeadPos.x && point.y == snakeHeadPos.y) {
+                        std::cout << "Collided!" << std::endl;
                         collided = true;
                     }
                 }
